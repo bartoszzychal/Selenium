@@ -1,14 +1,27 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>bz</groupId>
-  <artifactId>new-selenium-testing</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  
-  <properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>bz</groupId>
+	<artifactId>new-selenium-testing</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<properties>
 		<testng.version>6.8.7</testng.version>
 		<selenium.version>2.53.0</selenium.version>
 		<junit.version>4.11</junit.version>
+		<java.version>1.8</java.version>
+		<node.version>v0.12.13</node.version>
+		<npm.version>2.15.1</npm.version>
+		<frontend-maven-plugin.version>0.0.29</frontend-maven-plugin.version>
+		<maven-antrun-plugin.version>1.6</maven-antrun-plugin.version>
+		<surefire-junit47.version>2.19.1</surefire-junit47.version>
+		<site.dir>C:\Users\ZBARTOSZ\oasp_template</site.dir>
+		<site.page>http://localhost:9000/#/component-1/dialog-a</site.page>
+		<site.localhost>localhost</site.localhost>
+		<site.port>9000</site.port>
+		<script.filename>start_gulp.sh</script.filename>
 	</properties>
+
 
 	<dependencies>
 		<dependency>
@@ -35,30 +48,128 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>${frontend-maven-plugin.version}</version>
+				<configuration>
+					<workingDirectory>
+						${site.dir}
+					</workingDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>install node and npm</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+						<configuration>
+							<nodeVersion>${node.version}</nodeVersion>
+							<npmVersion>${npm.version}</npmVersion>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>npm install</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+
+					<!-- <execution> <id>bower install</id> <phase>initialize</phase> <goals> 
+						<goal>npm</goal> </goals> <configuration> <arguments>install bower</arguments> 
+						</configuration> </execution> -->
+
+					<execution>
+						<id>gulp install</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>install gulp</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven-antrun-plugin.version}</version>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<id>##################START GULP SERVER#######################</id>
+						<configuration>
+							<target name="success" depends="gulp_serve">
+								<echo message="##################GULP SERVED#######################"></echo>
+							</target>
+
+							<target name="gulp_serve">
+								<property name="spawn" value="true" />
+								<parallel>
+									<sequential>
+										<echo message="Starting at http://${site.localhost}:${site.port}/"
+											level="info" />
+									</sequential>
+									<sequential>
+										<exec executable="sh" dir="${site.dir}" spawn="${spawn}">
+											<arg value="${script.filename}" />
+										</exec>
+									</sequential>
+									<sequential>
+										<waitfor maxwait="3" maxwaitunit="minute"
+											checkeveryunit="millisecond" checkevery="200">
+											<http url="http://${site.localhost}:${site.port}/" />
+										</waitfor>
+										<antcall target="success"></antcall>
+									</sequential>
+
+								</parallel>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<skip>true</skip>
+					<skip>false</skip>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit47</artifactId>
+						<version>${surefire-junit47.version}</version>
+					</dependency>
+				</dependencies>
 				<executions>
 					<execution>
+						<phase>integration-test</phase>
 						<id>integration-test</id>
 						<goals>
 							<goal>integration-test</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>verify</id>
-						<goals>
 							<goal>verify</goal>
 						</goals>
 					</execution>
