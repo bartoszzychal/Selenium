@@ -125,7 +125,7 @@
 											level="info" />
 									</sequential>
 									<sequential>
-										<exec executable="sh" dir="${site.dir}" spawn="${spawn}">
+										<exec executable="bash" dir="${site.dir}" spawn="${spawn}">
 											<arg value="${script.filename}" />
 										</exec>
 									</sequential>
