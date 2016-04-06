@@ -16,9 +16,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.opera.OperaDriver;
 
 import angularPage.DriverFactory.DriverFactory;
 import angularPage.DriverFactory.DriverType;
@@ -34,7 +31,7 @@ public class EditModalDialogSeleniumTest extends AbstractSelenium {
 	
 	@Parameters
 	public static Collection<DriverType[]> data() {
-		DriverType[][] driver = new DriverType[][] { { DriverType.Chrome },{ DriverType.InternetExplorer },{ DriverType.Opera } };
+		DriverType[][] driver = new DriverType[][] { { DriverType.Chrome }, {DriverType.Opera}, {DriverType.InternetExplorer} };
 	    return Arrays.asList(driver);
 	}
 	

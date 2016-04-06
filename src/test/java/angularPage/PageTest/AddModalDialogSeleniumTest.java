@@ -31,7 +31,7 @@ public class AddModalDialogSeleniumTest extends AbstractSelenium {
 	
 	@Parameters
 	public static Collection<DriverType[]> data() {
-		DriverType[][] driver = new DriverType[][] { { DriverType.Chrome },{ DriverType.InternetExplorer },{ DriverType.Opera } };
+		DriverType[][] driver = new DriverType[][] { { DriverType.Chrome }, {DriverType.Opera}, {DriverType.InternetExplorer} };
 	    return Arrays.asList(driver);
 	}
 	
@@ -149,7 +149,7 @@ public class AddModalDialogSeleniumTest extends AbstractSelenium {
 		assertArrayEquals(data.toArray(), editedRow.toArray());
 	}
 	
-	@Test(timeout = 50000)
+	@Test(timeout = 100000)
 	public void allDataShouldSaveAndPutOnTheLastPositionOfTable() throws InterruptedException{
 		//given
 		AbstractPageModalObject addModalDialog;

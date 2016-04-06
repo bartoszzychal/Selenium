@@ -28,7 +28,7 @@ public class DialogASeleniumTest extends AbstractSelenium{
 	
 	@Parameters
 	public static Collection<DriverType[]> data() {
-		DriverType[][] driver = new DriverType[][] { { DriverType.Chrome },{ DriverType.InternetExplorer },{ DriverType.Opera } };
+		DriverType[][] driver = new DriverType[][] { { DriverType.Chrome }, {DriverType.Opera}, {DriverType.InternetExplorer} };
 	    return Arrays.asList(driver);
 	}
 	
