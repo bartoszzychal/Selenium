@@ -112,10 +112,6 @@
 						<phase>generate-resources</phase>
 						<id>##################START GULP SERVER#######################</id>
 						<configuration>
-							<target name="success" depends="gulp_serve">
-								<echo message="##################GULP SERVED#######################"></echo>
-							</target>
-
 							<target name="gulp_serve">
 								<property name="spawn" value="true" />
 								<parallel>
@@ -133,9 +129,8 @@
 											checkeveryunit="millisecond" checkevery="200">
 											<http url="http://${site.localhost}:${site.port}/" />
 										</waitfor>
-										<antcall target="success"></antcall>
+										<echo message="##################GULP SERVED#######################"></echo>
 									</sequential>
-
 								</parallel>
 							</target>
 						</configuration>
